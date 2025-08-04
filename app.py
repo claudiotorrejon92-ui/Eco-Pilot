@@ -71,6 +71,25 @@ if not df.empty:
     st.subheader("💰 Valor Económico Estimado")
     st.metric("Total Estimado (USD)", f"${valor_total:,.0f}")
 
+    # MÓDULO 3: BIOX
+    st.subheader("🧬 Módulo 3: Biooxidación (BIOX)")
+    st.markdown("Ingrese los parámetros operacionales para simular el rendimiento del consorcio bacteriano:")
+
+    ph = st.number_input("pH de operación", min_value=0.5, max_value=3.0, value=1.6, step=0.1)
+    temp = st.number_input("Temperatura (°C)", min_value=30.0, max_value=50.0, value=42.0, step=0.5)
+    tiempo = st.number_input("Tiempo de residencia (días)", min_value=1.0, max_value=10.0, value=5.0)
+    redox = st.number_input("Eh Redox (mV)", min_value=300, max_value=700, value=450)
+    do = st.number_input("Oxígeno disuelto (mg/L)", min_value=2.0, max_value=10.0, value=7.0)
+    fe3 = st.number_input("Fe(III) disponible (g/L)", min_value=5.0, max_value=30.0, value=15.0)
+    solidos = st.number_input("% sólidos en pulpa", min_value=5.0, max_value=25.0, value=18.0)
+
+    st.markdown("**Resultado Simulado:**")
+    eficiencia_biox = min(95, max(60, 70 + (temp - 40) + (redox - 400)/10 - (ph - 1.6)*10))
+
+    st.metric("Eficiencia estimada BIOX (%)", f"{eficiencia_biox:.1f}%")
+    oro_final = au_recuperado * (eficiencia_biox / 100)
+    st.metric("Au Liberado en BIOX (g)", f"{oro_final:,.0f}")
+
     st.caption("Desarrollado por Claudio Torrejón - Bettermin 2025")
 else:
     st.warning("Carga o crea tu archivo relaves.csv para comenzar la simulación.")

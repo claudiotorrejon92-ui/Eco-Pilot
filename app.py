@@ -12,13 +12,16 @@ st.set_page_config(page_title="Eco-Pilot Bettermin", layout="wide")
 st.title("🧠 ECO-PILOT - Simulador Beta de Relaves")
 
 # Cargar datos
+import os
+
 @st.cache_data
 def load_data():
-    try:
-        return pd.read_csv("data/relaves.csv")
-    except FileNotFoundError:
-        st.error("No se encontró el archivo data/relaves.csv. Por favor, verifica la ruta o sube el archivo.")
+    file_path = os.path.join(os.path.dirname(__file__), "data", "relaves.csv")
+    if not os.path.exists(file_path):
+        st.error(f"No se encontró el archivo en: {file_path}")
         return pd.DataFrame()
+    return pd.read_csv(file_path)
+
 
 df = load_data()
 

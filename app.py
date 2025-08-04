@@ -85,10 +85,27 @@ if not df.empty:
 
     st.markdown("**Resultado Simulado:**")
     eficiencia_biox = min(95, max(60, 70 + (temp - 40) + (redox - 400)/10 - (ph - 1.6)*10))
-
     st.metric("Eficiencia estimada BIOX (%)", f"{eficiencia_biox:.1f}%")
     oro_final = au_recuperado * (eficiencia_biox / 100)
     st.metric("Au Liberado en BIOX (g)", f"{oro_final:,.0f}")
+
+    # MÓDULO 4: Lixiviación y Producción Final
+    st.subheader("⚗️ Módulo 4: Lixiviación y Producción Final")
+    st.markdown("Estimación de recuperación metalúrgica final y proyección de ventas:")
+
+    lixiviacion_ef = st.slider("Eficiencia de Lixiviación (%)", min_value=50, max_value=100, value=92)
+    electroobtencion_ef = st.slider("Eficiencia Electroobtención Cu (%)", min_value=80, max_value=100, value=95)
+
+    oro_dore = oro_final * (lixiviacion_ef / 100)
+    cobre_catodos = cu_recuperado * (eficiencia_biox / 100) * (electroobtencion_ef / 100)
+
+    valor_dore = oro_dore * selected["Precio Au (USD/g)"]
+    valor_catodos = cobre_catodos * selected["Precio Cu (USD/kg)"]
+    valor_final_total = valor_dore + valor_catodos
+
+    st.metric("Dore Producido (g Au)", f"{oro_dore:,.0f}")
+    st.metric("Cátodos Producidos (kg Cu)", f"{cobre_catodos:,.0f}")
+    st.metric("Valor Total Estimado (USD)", f"${valor_final_total:,.0f}")
 
     st.caption("Desarrollado por Claudio Torrejón - Bettermin 2025")
 else:
